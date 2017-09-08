@@ -1,0 +1,207 @@
+# Need help configuring? View the Documentation: https://poloniexlendingbot.readthedocs.io/en/latest/configuration.html
+
+[API]
+# Where to work? "Poloniex" or "Bitfinex". Default is "Poloniex"
+#exchange = Poloniex
+apikey = YourAPIKey
+secret = YourSecret
+
+[POLONIEX]
+# Full list of supported currencies
+all_currencies = STR,BTC,BTS,CLAM,DOGE,DASH,LTC,MAID,XMR,XRP,ETH,FCT
+
+[BITFINEX]
+# Full list of supported currencies
+all_currencies = USD,BTC,BCH,ETH,XRP,IOT,XMR,LTC,OMG,ETC,EOS,DSH,ZEC
+
+[BOT]
+#Custom name of the bot, that will be displayed in html page
+label = Lending Bot
+
+#Sleeps between active iterations, time in seconds (1-3600)
+sleeptimeactive = 60
+
+#Sleeps between inactive iterations, time in seconds (1-3600)
+#Set to the same value as sleeptimeactive to disable
+sleeptimeinactive = 300
+
+#Timeout in seconds, the bot shall wait for a response during each request
+#timeout = 30
+
+#Minimum daily lend rate in percent (0.0031-5)
+#Setting to 0.0031 is about 1% a year, not worth it.
+mindailyrate = 0.005
+
+#Maximum lending rate. 2% is good choice because it's default at margin trader interface.
+#5% is the maximum rate accepted by the exchange (0.003-5)
+maxdailyrate = 5
+
+#The number of offers to split the available balance across the [gaptop, gapbottom] range. (1-20)
+spreadlend = 3
+
+#The depth of lendbook to move through before placing the first (gapbottom) and last (gaptop) offer.
+#If gapbottom is set to 0, the first offer will be at the lowest possible rate.
+#However some low value is recommended to skip dust offers.
+# Gap modes: Raw, RawBTC, Relative
+gapMode = RawBTC
+gapbottom = 40
+gaptop = 200
+
+#Daily lend rate threshold after which we offer lends for x days as opposed to 2.
+#If set to 0 all offers will be placed for a 2 day period (0.003-5)
+# Poloniex max lending period: 60 days
+# Bitfinex max lending period: 30 days
+xdaythreshold = 0.2
+xdays = 60
+#When xdayspread is set, lending days will be incremented linear from 2 days at (xdaythreshold/xdayspread) lent rate
+#to (xdays) days at (xdaythreshold) lent rate. (0-10)
+#xdayspread = 2
+
+#Auto-transfer of funds from exchange to lending balance.
+#Enter ALL to transfer all coins, enter ACTIVE to transfer any coins you have in your lending account when the bot starts, these can be mixed.
+#The currencies you enter below (comment it out to disable entirely, just leaving empty will result in an error) will be automatically transferred from your exchange balance to your lending balance whenever you deposit them.
+#transferableCurrencies = STR,BTC,BTS,CLAM,DOGE,DASH,LTC,MAID,XMR,XRP,ETH,FCT
+#transferableCurrencies = USD,BTC,BCH,ETH,XRP,IOT,XMR,LTC,OMG,ETC,EOS,DSH,ZEC
+
+#Minimum loan size, the minimum size of offers to make, bigger values prevent the bot from loaning small available amounts but reduce loan fragmentation.
+minloansize = 0.01
+
+#Keep Stuck Orders - Sometimes an order gets partially filled. When this happens it may leave the remainder of your coin under the set minloansize.
+#If this happens, KeepStuckOrders will keep your order where it is so maybe it can be filled. Otherwise it will be canceled and held until orders expire.
+keepstuckorders = True
+
+#Hide coins - Instead of keeping your coins lent out at minlendrate when it is not met, the bot will hold them and wait for the rate to surpass it.
+hideCoins = True
+
+#End date for lending, bot will try to make sure all your loans are done by this date so you can withdraw or do whatever you need.
+#Uncomment to enable.
+#Format: YEAR,MONTH,DAY
+#endDate = 2016,12,25
+
+#Raw maximum amount to lend if under maxtolendrate.
+#If set to 0 or commented: the bot will check for maxpercenttolend.(0+)
+#maxtolend = 0
+
+#Maximum percent to lend if under maxtolendrate.
+#If set to 0 or commented: the bot will lend 100% of your balance regardless of rate. (0-100)
+#maxpercenttolend = 0
+
+#Max to lend conditional rate.
+#If set to more than 0: the maxtolend or maxpercenttolend will be used when the rate is less than or equal to the maxtolendrate.
+#If set to 0 or commented: the bot will use the maxtolend or maxpercenttolend all the time. (0.0031-5)
+#maxtolendrate = 0
+
+#Syntax: ["COIN:mindailyrate:maxactiveamount:maxtolend:maxpercenttolend:maxtolendrate",...]
+#If maxactive amount is 0: stop lending this coin. in the future you'll be able to limit amount to be lent.
+#If maxtolend is 0: check for maxpercenttolend.
+#If maxpercenttolend is 0: 100% is going to be lent.
+#If maxtolendrate is set to more than 0: the maxtolend or maxpercenttolend will be used when then rate is less or equal to the maxtolendrate. if set to 0 the bot will use the maxtolend or maxpercenttolend all the time.
+# Please configure via the coinconfig line below OR individual coins in the [BTC], [CLAM], etc section. NOT both.
+# coinconfig takes precedence
+#coinconfig = ["BTC:0.18:1:0:0:0","CLAM:0.6:1:0:0:0"]
+
+#This option creates a json log file instead of console output which includes the most recent status.
+#Uncomment both jsonfile and jsonlogsize to enable.
+#Keep this in the default location if you want to use the webserver.
+#jsonfile = www/botlog.json
+
+#Limits the amount of log lines to save.
+#jsonlogsize = 200
+
+#Enables a webserver for the www folder, in order to easily use the lendingbot.html with the .json log.
+#startWebServer = true
+
+#Customize the IP and port that the webserver is hosted on. Defaults respectively to 0.0.0.0 and 8000
+#0.0.0.0 will point to your default IP (Local IP on LAN as well as localhost), set to 127.0.0.1 if you want it to be only accessible by host computer.
+#Do not set to a reserved port
+#Advanced users only.
+#customWebServerAddress = 0.0.0.0
+#customWebServerPort = 8000
+
+#Customize or select the desired template for the webserver. Default to 'www'.
+#customWebServerTemplate = www
+
+#The currency that the HTML Overview will present the earnings summary in.
+#Options are BTC, USDT (USD on Bitfinex), ETH or anything as long as it has a direct BTC market. The default is BTC.
+#outputCurrency = BTC
+
+#Plugins allow extending Bot functionality with extra features.
+#plugins = AccountStats
+
+#[ACCOUNTSTATS]
+#ReportInterval = 86400
+
+# Currencies can be configured here, or in the coinconfig. Coinconfig takes precedence.
+#[BTC]
+#minloansize = 0.01
+#mindailyrate = 0.18
+#maxactiveamount = 1
+#maxtolend = 0
+#maxpercenttolend = 0
+#maxtolendrate = 0
+
+#[CLAM]
+#minloansize = 1
+#mindailyrate = 0.6
+#maxactiveamount = 1
+#maxtolend = 0
+#maxpercenttolend = 0
+#maxtolendrate = 0
+
+[notifications]
+notify_new_loans = False
+notify_tx_coins = False
+notify_xday_threshold = False
+notify_summary_minutes = 0
+notify_caught_exception = False
+#notify_prefix = [Polo]
+
+email = False
+email_login_address = me@gmail.com
+email_login_password = secretPassword
+email_smtp_server = smtp.gmail.com
+email_smtp_port = 465
+email_smtp_starttls = False
+email_to_addresses = me@gmail.com,you@gmail.com
+
+slack = False
+slack_token = 1234567890abcdef
+slack_channels = #cryptocurrency,@someUser
+
+telegram = False
+telegram_bot_id = 1234567890abcdef
+telegram_chat_ids = @polopolo,@cryptocurrency
+
+pushbullet = False
+pushbullet_token = 1234567890abcdef
+pushbullet_deviceid = 1234567890abcdef
+
+irc = False
+irc_host = irc.freenode.net
+irc_port = 6667
+irc_nick = LendingBot
+irc_ident = ledningbot
+irc_realname = Poloniex lending bot
+irc_target = #bitbotfactory
+
+#[MarketAnalysis]
+# PLEASE refer to the docs before attempting to use any of this. There are a lot of things here that will not work
+# correctly unless you understand what you are doing.
+analyseCurrencies = STR,BTC,BTS,CLAM,DOGE,DASH,LTC,MAID,XMR,XRP,ETH,FCT
+lendingStyle = 75
+MACD_long_win_seconds = 1800
+#MACD_short_win_seconds = 150
+# 3 days = 60 * 60 * 24 * 3 = 259200
+percentile_seconds = 259200
+# keep_history_seconds > (greater of (percentile_seconds, MACD_long_win_seconds) * 1.1)
+#keep_history_seconds = 285120
+#recorded_levels = 10
+# 15 %  means we need one data point every 9 seconds. You probably don't need to change this.
+#data_tolerance = 15
+#delete_thread_sleep = 60
+#ma_debug_log = False
+
+[Daily_min]
+# This defaults to percentile, MACD is the moving average calc and should give better rates
+#method = MACD
+multiplier = 1.05
