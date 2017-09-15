@@ -102,7 +102,7 @@ try:
             sys.stdout.flush()
             time.sleep(Lending.get_sleep_time())
             '''
-            Lending.getSupplyVolume('BTC')
+            Lending.getSupplyVolume('USD')
             time.sleep(1)
         except KeyboardInterrupt:
             # allow existing the main bot loop
